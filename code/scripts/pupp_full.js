@@ -5,6 +5,7 @@ const os = require('os');
 const path = require('path');
 const jpeg = require('jpeg-js');
 const { execFile } = require('child_process');
+const { closeTabsByUrl } = require('./tab_hygiene');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const LOG_DIR = path.join(ROOT, 'logs');
@@ -226,6 +227,11 @@ async function connectWithConsent(retries = 5) {
 
 (async () => {
   const browser = await connectWithConsent();
+  // 开新页前清理上轮残留（只关 URL 命中本流程特征的标签，用户原有标签不动）
+  const stale = await closeTabsByUrl(browser, ['act=Display/image', 'act=Archive/search']);
+  if (stale) console.log('[tabs] 关闭 %s 个上轮残留标签', stale);
+  const mine = new Set();
+  try {
   const netLog = path.join(LOG_DIR, 'network-full.jsonl');
   fs.writeFileSync(netLog, '');
   const write = (o) => fs.appendFileSync(netLog, JSON.stringify(o) + '\n');
@@ -250,6 +256,7 @@ async function connectWithConsent(retries = 5) {
   };
 
   const page = await browser.newPage();
+  mine.add(page);
   wire(page, 'main');
   await page.goto('https://ahonline.drnh.gov.tw/index.php?act=Archive',
     { waitUntil: 'load', timeout: 90000 });
@@ -276,6 +283,7 @@ async function connectWithConsent(retries = 5) {
     page.$$('.online').then((es) => es[idx].click()),
   ]);
   wire(viewer, 'viewer');
+  mine.add(viewer);
   await viewer.waitForNavigation({ waitUntil: 'networkidle0', timeout: 60000 }).catch(() => {});
   await sleep(7000);
   console.log('[f] viewer:', viewer.url());
@@ -348,15 +356,22 @@ async function connectWithConsent(retries = 5) {
       if (!unlocked) throw new Error('unlock failed: ' + unlockText.slice(0, 200));
     }
 
-    // 下载无水印 original
-    const before = new Set(fs.readdirSync(DL_DIR));
+    // 下载无水印 original（CDP 下载会覆盖同名文件，故同时记录 mtime，不能只看新文件名）
+    const stat0 = new Map(fs.readdirSync(DL_DIR).map((f) => {
+      try { return [f, fs.statSync(path.join(DL_DIR, f)).mtimeMs]; } catch { return [f, 0]; }
+    }));
     await viewer.click('#act_image_saved');
     let done = null;
     for (let w = 0; w < 90; w++) {
       await sleep(1000);
       const cur = fs.readdirSync(DL_DIR);
-      const fin = cur.filter((f) => !f.endsWith('.crdownload') && !before.has(f));
-      if (fin.length && !cur.some((f) => f.endsWith('.crdownload'))) { done = fin[0]; break; }
+      if (cur.some((f) => f.endsWith('.crdownload'))) continue;
+      const changed = cur.filter((f) => {
+        let mt = 0;
+        try { mt = fs.statSync(path.join(DL_DIR, f)).mtimeMs; } catch {}
+        return !stat0.has(f) || mt > (stat0.get(f) || 0);
+      });
+      if (changed.length) { done = changed[0]; break; }
     }
     console.log('[f] downloaded:', done);
     report.push({ label, code, wasLocked: !!lock, file: done });
@@ -364,6 +379,14 @@ async function connectWithConsent(retries = 5) {
   }
 
   fs.writeFileSync(path.join(LOG_DIR, 'full-report.json'), JSON.stringify(report, null, 2));
-  browser.disconnect();
-  console.log('[f] disconnected');
+  } finally {
+    // 收尾：关闭本轮打开的全部标签（archive + viewer），用户原有标签与窗口不动
+    let n = 0;
+    for (const p of mine) {
+      try { if (!p.isClosed()) { await p.close(); n++; } } catch {}
+    }
+    console.log('[tabs] 已关闭本轮标签 %s 个', n);
+    browser.disconnect();
+    console.log('[f] disconnected');
+  }
 })().catch((e) => { console.error('FULL ERROR', e); process.exit(1); });
