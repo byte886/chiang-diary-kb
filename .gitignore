@@ -1,0 +1,39 @@
+# ===== 依赖 =====
+code/node_modules/
+
+# ===== 早期侦察用的独立 Chrome profile =====
+code/.userdata/
+
+# ===== 批量采集的影像（多 GB，禁止入库；GitHub 只放代码与文档） =====
+downloads/
+
+# ===== 运行日志：仅保留站点源码转储与图标模板 =====
+logs/*
+!logs/templates/
+!logs/js_archive.js
+!logs/js_display.js
+!logs/js_library.js
+
+# ===== 加密凭证（本项目默认无） =====
+.secrets/
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# ===== Node =====
+npm-debug.log*
+
+# ===== macOS =====
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ===== 临时/备份 =====
+*.tmp
+*.bak
+*.old

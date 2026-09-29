@@ -1,0 +1,19 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jpeg-js": "^0.4.4",
+    "playwright": "^1.63.0",
+    "pngjs": "^7.0.0",
+    "puppeteer-core": "^25.12.0",
+    "undici": "^8.11.2"
+  }
+}
