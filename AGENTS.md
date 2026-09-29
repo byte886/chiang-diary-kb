@@ -7,9 +7,10 @@
 
 - **冷启动**（首次接触 / 跨阶段 / 没把握），按序读：
   1. `README.md` — 项目目标、边界、目录与快速开始
-  2. `docs/REQUIREMENTS.md` — 需求、验收标准、年份策略
-  3. `docs/download_protocol_report.md` — 已验证的下载协议（权威）
-  4. `docs/WORKFLOW.md` — 批量流程与下载器约定
+  2. `docs/HANDOFF.md` — 环境 bootstrap 与交接验收（跨环境时优先）
+  3. `docs/REQUIREMENTS.md` — 需求、验收标准、年份策略
+  4. `docs/download_protocol_report.md` — 已验证的下载协议（权威）
+  5. `docs/WORKFLOW.md` — 批量流程与下载器约定
 - **续接**：读 `project-management/TASK_STATUS.md` + `ISSUES.md`，再按需深读。
 - 不靠对话记忆猜测；ObjectCode/PageCode 每次会话变化，禁止硬编码。
 

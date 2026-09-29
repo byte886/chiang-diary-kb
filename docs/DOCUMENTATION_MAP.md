@@ -17,6 +17,9 @@
 | [DIRECTORY_STRUCTURE.md](DIRECTORY_STRUCTURE.md) | 仓库与每件成品目录结构 |
 | [SYSTEM_REQUIREMENTS.md](SYSTEM_REQUIREMENTS.md) | 平台、运行时、依赖、网络事实 |
 | [download_protocol_report.md](download_protocol_report.md) | **下载协议权威报告（DIRECT_HTTP 判定）** |
+| [HANDOFF.md](HANDOFF.md) | **跨环境交接手册（bootstrap、验收清单）** |
+| [sop/UNLOCK_VISION_SOP.md](sop/UNLOCK_VISION_SOP.md) | 锁定挑战视觉解锁 SOP |
+| [sop/CHROME_CDP_SOP.md](sop/CHROME_CDP_SOP.md) | Chrome 连接/授权/标签卫生 SOP |
 | [采集方案_v2.md](采集方案_v2.md) | 原始方案 v2.0 |
 | [下载技术探测与批量下载方案](下载技术探测与批量下载方案.md) | 原始技术探测方案 |
 

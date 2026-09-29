@@ -2,6 +2,18 @@
 
 本项目所有重要变更记录。格式参照 Keep a Changelog，日期为 Asia/Shanghai。
 
+## [0.2.0] - 2026-09-29
+
+### Added
+- 跨环境交接手册 `docs/HANDOFF.md`（bootstrap、接手动作、验收清单）
+- SOP：`docs/sop/UNLOCK_VISION_SOP.md`（视觉解锁）、`CHROME_CDP_SOP.md`（Chrome 连接/授权/标签卫生）
+- `code/scripts/tab_hygiene.js`：按 URL 模式关闭本流程标签
+- 同步沉淀至 mac-system-toolkit 技能：`scripts/chrome-cdp/` 连接工程与 SOP
+
+### Changed
+- pupp_full.js：开新页前清理残留标签、收尾关闭本轮标签（archive + viewer）
+- 下载完成检测兼容 CDP 覆盖同名文件（按 mtime 变化判定）
+
 ## [0.1.0] - 2026-09-29
 
 ### Added
