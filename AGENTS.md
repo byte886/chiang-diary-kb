@@ -42,6 +42,8 @@
 | 文件 | 作用 |
 |---|---|
 | `code/scripts/http_replay.js` | 独立 HTTP client 全链路复现（DIRECT_HTTP 主路径） |
+| `code/scripts/batch_download.js` | 批量下载器：独立会话/并发2/断点续传/退避/校验门（PHASE 5+） |
+| `manifests/` | 批量清单（JSON/JSONL，含格式说明） |
 | `code/scripts/pupp_full.js` | 浏览器参照驱动（附加日常 Chrome，含授权自动处理） |
 | `code/scripts/lib_unlock.js` | 共享识别库：黄色指令 OCR + 绿色图标分类 |
 | `code/scripts/prep_yellow.py` | 黄色文字提取、转正预处理 |
@@ -58,6 +60,10 @@
 
 # HTTP 全链路复现测试件
 node code/scripts/http_replay.js
+
+# 批量下载（清单见 manifests/；状态落 logs/batch/，影像落 downloads/）
+node code/scripts/batch_download.js --manifest manifests/manifest.example.json
+node code/scripts/batch_download.js --ids 002-150101-00037-141
 
 # 浏览器参照路径（不另开 Chrome；收尾自动 disconnect）
 node code/scripts/pupp_full.js

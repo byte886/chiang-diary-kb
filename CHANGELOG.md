@@ -2,6 +2,23 @@
 
 本项目所有重要变更记录。格式参照 Keep a Changelog，日期为 Asia/Shanghai。
 
+## [0.3.0] - 2026-09-29
+
+### Added
+- 批量下载器 `code/scripts/batch_download.js`（PHASE 5）：对象级独立会话、
+  并发 2、请求间隔 1–3s、断点续传（`logs/batch/download_status.jsonl` + `progress.json`）、
+  429/5xx 指数退避、校验门（JPEG magic bytes + 可解码 + 尺寸 + SHA-256）
+- 落盘结构 `downloads/YYYY/<典藏号>/original/NNN.jpg` + `metadata.json`（来源、尺寸、SHA-256）
+- `manifests/`：批量清单格式说明与示例
+
+### Fixed
+- 批量器 readInstruction 需文件路径而非 Buffer（锁定图先落临时文件）
+- `--ids` 参数在遇到下一个选项时正确截断（不再把选项值误当典藏号）
+
+### Verified
+- 批量器在测试件 `002-150101-00037-141` 端到端跑通（1947，737×1087，369632B），
+  断点续传重跑正确 skip（PHASE 6 的 1 件验证完成）
+
 ## [0.2.0] - 2026-09-29
 
 ### Added
